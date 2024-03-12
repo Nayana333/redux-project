@@ -17,7 +17,7 @@ const userSchema=mongoose.Schema({
     
 
 },{
-    timestamps:true
+    timestamps:true // to update the created and updated time
 })
 
 module.exports=mongoose.model('user',userSchema)

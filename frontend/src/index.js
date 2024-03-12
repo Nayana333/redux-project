@@ -1,7 +1,7 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { store } from './app/store';
+import { createRoot } from 'react-dom/client';//create a root for react application
+import { Provider } from 'react-redux';//proviode redux store to react application
+import { store } from './app/store';//redux store
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';

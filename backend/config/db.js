@@ -8,7 +8,7 @@ const connectDB=async ()=>{
         console.log(`mongodb connected ${conn.connection.host}`.cyan.underline); 
     } catch (error) {
         console.log(error);
-        process.exit(1)
+        process.exit(1) //exit from processing
         
     }
 }

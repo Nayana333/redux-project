@@ -1,74 +1,80 @@
-const jwt = require('jsonwebtoken');
-const bcrypt=require('bcryptjs')
-const asyncHandler = require('express-async-handler')
-const User=require('../model/userModel')
+const jwt = require('jsonwebtoken'); //use for json web token
+const bcrypt = require('bcryptjs')
+const asyncHandler = require('express-async-handler')// make an easy way to catch errors
+const User = require('../model/userModel')
+require('dotenv').config();
 
 
-const registerUser=asyncHandler(async(req,res)=>{
-    const{name,email,password}=req.body
-    if(!name || !email || !password){
+const registerUser = asyncHandler(async (req, res) => {
+    const { name, email, password } = req.body
+    if (!name || !email || !password) {
         res.status(400)
         throw new Error('Please add all fields')
     }
-    const userExists=await User.findOne({email})
-    if(userExists){
+    const userExists = await User.findOne({ email })
+    if (userExists) {
         res.status(400)
         throw new Error('user already exist')
 
     }
 
     //hash password
-    const salt=await bcrypt.genSalt(10)
-    const hashedPassword=await bcrypt.hash(password,salt)
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
     //create user
 
-    const user=await User.create({
-        name,email,password:hashedPassword
+    const user = await User.create({
+        name, email, password: hashedPassword
     })
 
-    if(user){
+    if (user) {
         res.status(201).json({
-            _id:user.id,
-            name:user.name,
-            email:user.email,
-            token:generateTocken(user._id)
-
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            token: generateTocken(user._id)
 
         })
     }
-    else{
+    else {
         res.status(400)
         throw new Error('invalid user data')
     }
 })
 
 
-const loginUser=asyncHandler(async(req,res)=>{
+const loginUser = asyncHandler(async (req, res) => {
 
-    const {email,password}=req.body
-//check for email
-    const user=await User.findOne({email})
-    if(user && (await bcrypt.compare(password,user.password))){
+    const { email, password } = req.body
+
+    //check for email
+
+    const user = await User.findOne({ email: email })
+    console.log(user);
+    if (user && (await bcrypt.compare(password, user.password))) {
         res.json({
-            _id:user.id,
-            name:user.name,
-            email:user.email,
-            token:generateTocken(user._id)
+            _id: user.id,
+            name: user.name,
+            email: user.email,
+            token: generateTocken(user._id)
 
         })
-    }else{
+    } else {
         res.status(400)
         throw new Error('invalid credentials')
 
     }
-  
+
 })
 
 
-const getMe=asyncHandler(async(req,res)=>{
-    const {_id,name,email}=await User.findById(req.user.id)
+
+const getMe = asyncHandler(async (req, res) => {
+
+    const { _id, name, email } = await User.findById(req.user.id)
+
     res.status(200).json({
-        id:_id,
+        id: _id,
         name,
         email
     })
@@ -78,15 +84,21 @@ const getMe=asyncHandler(async(req,res)=>{
 //generate a token
 
 
-const generateTocken=(id)=>{
-    return jwt.sign({id},process.env.JWT_SECRET,{
-        expiresIn:'30d'
-    })
-}
+// const generateTocken=(id)=>{
+//     return jwt.sign({id},process.env.JWT_SECRET,{
+//         expiresIn:'30d'
+//     })
+// }
+
+const generateTocken = (id) => {
+    const secret = process.env.JWT_SECRET || 'fallback_secret_key';
+    return jwt.sign({ id }, secret, { expiresIn: '30d' });
+};
 
 
 
-module.exports={
+
+module.exports = {
     registerUser,
     loginUser,
     getMe
