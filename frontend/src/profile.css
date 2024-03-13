@@ -1,0 +1,65 @@
+body{
+    background:#eee;
+}
+
+.card{
+    border:none;
+
+    position:relative;
+    overflow:hidden;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.card:before{
+    
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:4px;
+    height:100%;
+    background-color:black;
+    transform:scaleY(1);
+    transition:all 0.5s;
+    transform-origin: bottom
+}
+
+
+
+
+
+
+.fonts{
+    font-size:11px;
+}
+
+.social-list{
+    display:flex;
+    list-style:none;
+    justify-content:center;
+    padding:0;
+}
+
+.social-list li{
+    padding:10px;
+    color:black;
+    font-size:19px;
+}
+
+
+.buttons button:nth-child(1){
+    border:1px solid black!important;
+    color:black;
+    height:40px;
+    background-color:white;
+}
+
+
+
+.buttons button:nth-child(2){
+    border:1px solid black!important;
+    color:black;
+    height:40px;
+    background-color:white;
+}
