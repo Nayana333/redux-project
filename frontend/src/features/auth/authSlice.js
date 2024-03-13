@@ -32,11 +32,6 @@ export const register = createAsyncThunk(
   }
 )
 
-//edit user
-
-const editUserDetails=async(token,id,name,email)=>{
-  
-}
 
 
 //login user
@@ -56,6 +51,23 @@ export const login = createAsyncThunk(
     }
   }
 )
+//upload profile
+
+export const profileUpdate=createAsyncThunk('auth/profile',async(profileUrl,thunkAPI)=>{
+  try {
+     const token = thunkAPI.getState().auth.user.token
+    return await authService.profileUpload(token,profileUrl)
+  } catch (error) {
+    const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    
+  }
+})
 
 export const logout = createAsyncThunk('auth/logout', async () => {
   await authService.logout()
@@ -106,6 +118,23 @@ export const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.user = null
+      })
+      .addCase(profileUpdate.pending,(state)=>{
+        state.isLoading=true
+      })
+      .addCase(profileUpdate.rejected,(state,action)=>{
+        state.isError=true;
+        state.isLoading=false
+        state.message=action.payload
+      })
+      .addCase(profileUpdate.fulfilled,(state,action)=>{
+        state.isLoading=true;
+        state.isSuccess=true;
+        state.user={
+          ...state.user,
+          profileUrl:action.payload.profileUrl
+        };
+        
       })
 
 

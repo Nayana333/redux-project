@@ -14,6 +14,11 @@ const userSchema=mongoose.Schema({
         type:String,
         required:[true,'please add a password']
     },
+    profileUrl:{
+        type:String,
+        default:"https://static.vecteezy.com/system/resources/thumbnails/002/387/693/small/user-profile-icon-free-vector.jpg"
+    }
+    
     
 
 },{

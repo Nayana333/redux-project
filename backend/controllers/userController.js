@@ -90,11 +90,19 @@ const generateTocken = (id) => {
     return jwt.sign({ id }, secret, { expiresIn: '30d' });
 };
 
+const profileUpload = asyncHandler(async (req, res) => {
+    console.log('controller');
+    const url = req.body.url;
 
+    const user = await User.findByIdAndUpdate(req.user.id, { profileUrl: url }, { new: true });
+    console.log(user);
 
+    res.status(200).json(user);
+});
 
 module.exports = {
     registerUser,
     loginUser,
-    getMe
-}
+    getMe,
+    profileUpload
+};

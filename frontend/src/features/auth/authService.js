@@ -1,46 +1,77 @@
-import axios from 'axios'
+import axios from 'axios';
 
-const API_URL='http://localhost:5000/'
+const API_URL = 'http://localhost:5000/';
 
-//register user
-
-const register=async(userData)=>{
-    const response=await axios.post(API_URL,userData)
-    if(response.data){
-        localStorage.setItem('user',JSON.stringify(response.data))
+// Register user
+const register = async (userData) => {
+    const response = await axios.post(API_URL, userData);
+    if (response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data));
     }
+    return response.data;
+};
 
-    return response.data
-}
-//login user
-const login=async(userData)=>{
-    const response=await axios.post(API_URL + 'login',userData)
-    if(response.data){
-        localStorage.setItem('user',JSON.stringify(response.data))
+// Login user
+const login = async (userData) => {
+    const response = await axios.post(API_URL + 'login', userData);
+    if (response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data));
     }
+    return response.data;
+};
 
-    return response.data
-}
-//logout
+// Logout
+const logout = () => {
+    localStorage.removeItem('user');
+};
 
-const logout=()=>{
-    localStorage.removeItem('user')
-}
- //edit user
-// const editUserDetails=async(token,id,name,email)=>{
-//     const config={
-//         headers:{
-//             Authorization:`Beaber ${token}`
+// Upload profile
+// const profileUpload = async (token, url) => {
+//     const config = {
+//         headers: {
+//             Authorization: `${token}`
 //         }
+//     };
+//     const liveUser = JSON.parse(localStorage.getItem('user'));
+//     const response = await axios.post(API_URL + 'profile/upload', { url, liveUser }, config);
+
+//     const userString = localStorage.getItem('user');
+
+//     if (userString) {
+//         const user = JSON.parse(userString);
+//         user.profileUrl = response.data.profileUrl;
+//         localStorage.setItem('user', JSON.stringify(user));
 //     }
+//     return response.data;
+// };
 
-  
-// }
+const profileUpload = async (token, url) => {
+    alert(url);
+    localStorage.setItem( url);
 
-const authService={
-    register,
-    logout,
-    login
+    const config = {
+        headers: {
+            Authorization: `${token}`
+        }
+    };
+    const liveUser = JSON.parse(localStorage.getItem('user'));
+    const response = await axios.post(API_URL + 'profile/upload', { url, liveUser }, config);
+
+    const userString = localStorage.getItem('user');
+
+    if (userString) {
+        const user = JSON.parse(userString);
+        user.profileUrl = response.data.profileUrl;
+        localStorage.setItem('user', JSON.stringify(user));
+    }
+    return response.data;
 }
 
-export default authService
+const authService = {
+    register,
+    login,
+    logout,
+    profileUpload
+};
+
+export default authService;
