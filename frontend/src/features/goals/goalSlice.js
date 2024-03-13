@@ -10,7 +10,7 @@ const initialState = {
 }
 
 export const createGoal = createAsyncThunk(
-  'goal/create',
+  'http://localhost:5000/',
   async (goalData, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
@@ -32,7 +32,7 @@ export const createGoal = createAsyncThunk(
 export const getGoals=createAsyncThunk('/goal/getAll',async(_,thunkAPI)=>{
   try {
     const token = thunkAPI.getState().auth.user.token
-      return await goalService.createGoal(token)
+      return await goalService.getGoal(token)
     
   } catch (error) {
     const message =

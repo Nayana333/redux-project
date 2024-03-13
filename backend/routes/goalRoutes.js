@@ -1,10 +1,11 @@
-const express=require('express')
-const router=express.Router()
-const {getGoals,setGoal,updateGoals,deleteGoals}=require('../controllers/goaslController')
-const {protect}=require('../middleware/authMiddleware')
+const express = require('express')
+const router = express.Router()
+const { getGoals, setGoal, updateGoals, deleteGoals } = require('../controllers/goaslController')
+const { protect } = require('../middleware/authMiddleware')
 
-router.route('/').get(protect,getGoals).post(protect,setGoal)
-router.route('/:id').delete(protect,deleteGoals).put(protect,updateGoals)
+router.post('/', protect, setGoal)
+router.get('/', protect, getGoals)
+router.route('/:id').delete(protect, deleteGoals).put(protect, updateGoals)
 
 
-module.exports=router
+module.exports = router

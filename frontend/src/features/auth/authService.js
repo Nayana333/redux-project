@@ -26,6 +26,16 @@ const login=async(userData)=>{
 const logout=()=>{
     localStorage.removeItem('user')
 }
+ //edit user
+// const editUserDetails=async(token,id,name,email)=>{
+//     const config={
+//         headers:{
+//             Authorization:`Beaber ${token}`
+//         }
+//     }
+
+  
+// }
 
 const authService={
     register,

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken'); //use for json web token
 const bcrypt = require('bcryptjs')
 const asyncHandler = require('express-async-handler')// make an easy way to catch errors
 const User = require('../model/userModel')
-require('dotenv').config();
+require('dotenv').config({path:''});
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -86,7 +86,7 @@ const getMe = asyncHandler(async (req, res) => {
 // }
 
 const generateTocken = (id) => {
-    const secret = process.env.JWT_SECRET || 'fallback_secret_key';
+    const secret = process.env.JWT_SECRET || 'abc123';
     return jwt.sign({ id }, secret, { expiresIn: '30d' });
 };
 

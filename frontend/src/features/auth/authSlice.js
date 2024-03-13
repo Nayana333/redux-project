@@ -32,6 +32,12 @@ export const register = createAsyncThunk(
   }
 )
 
+//edit user
+
+const editUserDetails=async(token,id,name,email)=>{
+  
+}
+
 
 //login user
 export const login = createAsyncThunk(

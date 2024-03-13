@@ -1,14 +1,13 @@
 import axios from 'axios'
 
-const API_URL = '/api/goals/'
+const API_URL = 'http://localhost:5000/goals/'
 
 //create new goals
 
 const createGoal=async (goalData,token)=>{
-    
     const config={
         headers:{
-            Authorization:  `Bearer ${token}`
+            Authorization:  `${token}`
         }
     }
 
@@ -18,14 +17,14 @@ const createGoal=async (goalData,token)=>{
 
 
 const getGoal=async (token)=>{
-    
     const config={
         headers:{
-            Authorization:  `Bearer ${token}`
+            Authorization:  `${token}`
         }
     }
 
     const response=await axios.get(API_URL,config)
+    console.log(response);
     return response.data
 }
 const goalService={
