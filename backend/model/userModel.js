@@ -21,7 +21,11 @@ const userSchema=mongoose.Schema({
     profileUrl:{
         type:String,
         default:"https://static.vecteezy.com/system/resources/thumbnails/002/387/693/small/user-profile-icon-free-vector.jpg"
-    }
+    },
+    isBlock:{
+        type:Boolean,
+        default:false
+    },
     
     
 

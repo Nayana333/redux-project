@@ -52,23 +52,6 @@ export const adminlogout = createAsyncThunk('auth/adminlogout', async () => {
 
 //edituser
 
-// export const editUser = createAsyncThunk('admin/editUser',
-
-//     async ({ userId, name, email }, thunkAPI) => {
-//         try {
-//             const token = thunkAPI.getState().adminAuth.admin.token
-//             return await adminAuthService.editUserDetails(token, userId, name, email)
-
-//         } catch (error) {
-//             alert(error)
-//                 const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
-//                 return thunkAPI.rejectWithValue(message)
-
-
-//         }
-//     }
-// )
-
 export const editUser = createAsyncThunk('admin/editUser', async ({ userId, name, email }, thunkAPI) => {
     try {
 
@@ -81,6 +64,44 @@ export const editUser = createAsyncThunk('admin/editUser', async ({ userId, name
         return thunkAPI.rejectWithValue(message)
     }
 })
+
+//UserBlock
+
+
+export const UserBlock=createAsyncThunk(
+    "admin/userBlock",
+    async(userId,thunkAPI)=>{
+        try {
+
+            const token = JSON.parse(localStorage.getItem('admin'))
+            return await adminAuthService.userBlock(token,userId)
+            
+        } catch (error) {
+            const message=(error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+            return thunkAPI.rejectWithValue(message)
+            
+        }
+    }
+)
+
+//search user
+
+export const searchUser=createAsyncThunk(
+    "admin/searchUser",
+    async(query,thunkAPI)=>{
+        try{
+            const token=thunkAPI.getState().admin.admin.token;
+            return await adminAuthService.searchUser(query,token)
+        }catch(error){
+            const message=(
+                error.response && error.response.data && error.response.data
+            ) ||error.toString()
+            return thunkAPI.rejectWithValue(message)
+        }
+    }
+);
+
+
 
 export const adminAuthSlice = createSlice({
     name: 'admin',
@@ -139,6 +160,19 @@ export const adminAuthSlice = createSlice({
                 state.isSuccess = true;
                 state.users = action.payload
 
+            })
+            .addCase(UserBlock.pending, (state) => {
+                state.isLoading = true;
+              })
+            .addCase(UserBlock.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.users = action.payload.users;
+              })
+            .addCase(UserBlock.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
             })
     }
 });

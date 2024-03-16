@@ -47,10 +47,44 @@ const editUserDetails = async (token, userId, name, email) => {
 };
 
 
+//blockuser
+
+
+const userBlock=async(token,userId)=>{
+    const config={
+        headers:{
+            Authorization:`${token}`
+        }
+
+    }
+    const response=await axios.post(API_URL+'block',{userId},config)
+    return response.data
+}
+
+
+//search user
+
+
+const searchUser=async(query,token)=>{
+    const config={
+        headers:{
+            Authorization:`${token}`
+        }
+    }
+
+    const response=await axios.post(API_URL+'search',{query},config)
+    return response.data
+
+}
+
+
+
 const adminAuthService = {
     adminLogin,
     adminLogout,
     getAllUsers,
-    editUserDetails
+    editUserDetails, 
+    userBlock,
+    searchUser
 }
 export default adminAuthService

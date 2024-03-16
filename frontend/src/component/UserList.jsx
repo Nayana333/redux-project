@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllUsers, reset,editUser } from '../features/adminAuth/adminAuthSlice';
+import { getAllUsers, reset,editUser,UserBlock } from '../features/adminAuth/adminAuthSlice';
 import { FaSignInAlt, } from 'react-icons/fa'
 
 import './table.css'
@@ -35,6 +35,13 @@ const UserList = () => {
         }
     };
 
+    const handleBlock=(userId)=>{
+        if(window.confirm("Are you sure want to block the user")){
+            dispatch(UserBlock(userId))
+        }
+      
+    }
+
     return (
 
         <div>
@@ -45,7 +52,8 @@ const UserList = () => {
                         <th className="table-cell-header">photo</th>
                         <th className="table-cell-header">name</th>
                         <th className="table-cell-header">Email</th>
-                        <th className="table-cell-header">edit</th>
+                        <th className="table-cell-header">Action</th>
+                        <th className="table-cell-header">Edit</th>
                     </tr>
                     {users && users.map((user, index) => (
                         <tr className="table-row" key={index}>
@@ -61,9 +69,13 @@ const UserList = () => {
                             <td className="table-cell">{user.name}</td>
                             <td className="table-cell">{user.email}</td>
                             <td className="table-cell action-button">
-                                <div className='button'>
-
-                                    <button className='btn btn-block' onClick={() => handleEdit(user._id, user.name, user.email)}>Edit</button>
+                                <div className='button' >
+                                <button className='btn btn-block' onClick={() => handleBlock(user._id)}>{user.isBlock ? 'Unblock':'Block'}</button>
+                                </div>
+                                </td>
+                                <td className="table-cell action-button">
+                                <div className='button' >
+                                <button className='btn btn-block' onClick={() => handleEdit(user._id, user.name, user.email)}>Edit</button>
                                 </div>
                             </td>
                         </tr>

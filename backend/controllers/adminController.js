@@ -89,10 +89,36 @@ const editUser=asyncHandler(async(req,res)=>{
     }
 })
 
+const userBlock=asyncHandler(async(req,res)=>{
+    const userId=req.body.userId;
+    console.log(req.body,'user');
+    const user=await User.findById(userId)
+    console.log(user);
+    if(!user){
+        res.status(400)
+        throw new Error('user not foun')
+    }
+    user.isBlock=!user.isBlock
+    await user.save()
+    const users=await User.find({isAdmin:false})
+    res.status(200).json({users});
+});
+
+
+const searchUser=asyncHandler(async(req,res)=>{
+    const {query}=req.body
+    const regex=new RegExp(`^${query}`, 'i');
+    const users=await User.find({name:{$regex:regex}})
+    res.status(200).json({users})
+})
+
+
 
 module.exports = {
     loginAdmin,
     getUsers,
-    editUser
+    editUser,
+    userBlock,
+    searchUser
 
 }
