@@ -62,7 +62,6 @@ const UserList = () => {
                             <td className="table-cell">{user.email}</td>
                             <td className="table-cell action-button">
                                 <div className='button'>
-                                                                        <button className='btn btn-block' onClick={() => handleEdit(user._id, user.name, user.email)}>Edit</button>
 
                                     <button className='btn btn-block' onClick={() => handleEdit(user._id, user.name, user.email)}>Edit</button>
                                 </div>
