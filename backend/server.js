@@ -14,10 +14,10 @@ app.use(express.json())
 app.use(morgan('dev'))
 app.use(cors())
 app.use(express.urlencoded({ extended: false }))
-
-app.use('/goals', require('./routes/goalRoutes'))
-app.use('/', require('./routes/userRoute'))
-app.use('/api/admin',require('./routes/adminRoute'))
+const user = require('./routes/userRoute')
+app.use('/api/admin/', require('./routes/adminRoute'))
+app.use('/goals/', require('./routes/goalRoutes'))
+app.use('/', user)
 
 
 app.use(errorHandler)
@@ -25,4 +25,3 @@ app.use(errorHandler)
 app.listen(port, () => {
     console.log(`server started in the port ${port}`);
 })
-

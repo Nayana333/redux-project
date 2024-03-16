@@ -46,8 +46,8 @@ const logout = () => {
 // };
 
 const profileUpload = async (token, url) => {
-    alert(url);
-    localStorage.setItem( url);
+ 
+    localStorage.setItem('url',JSON.stringify(url));
 
     const config = {
         headers: {
@@ -55,8 +55,9 @@ const profileUpload = async (token, url) => {
         }
     };
     const liveUser = JSON.parse(localStorage.getItem('user'));
+    console.log(liveUser, 'User');
     const response = await axios.post(API_URL + 'profile/upload', { url, liveUser }, config);
-
+    console.log(response);
     const userString = localStorage.getItem('user');
 
     if (userString) {

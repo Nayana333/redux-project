@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import UserList from '../../component/UserList'
+
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -9,8 +11,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
    
-    if(admin){
-    
+    if(admin){  
      navigate('/admin')
     }
     if (!admin) {
@@ -21,7 +22,8 @@ const AdminDashboard = () => {
   return (
     <div>
     <h1>Welcome {admin && admin.name}</h1>
-    <p> Email:{admin.email}</p>
+    <UserList/>
+    
     </div>
   );
 }

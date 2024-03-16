@@ -1,0 +1,13 @@
+.admin-dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .user-list-container {
+    width: 80%; /* Adjust width as needed */
+    margin-top: 20px; /* Add margin-top to separate from the header */
+  }
+
+  
+  

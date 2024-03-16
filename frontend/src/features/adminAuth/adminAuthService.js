@@ -16,9 +16,23 @@ const adminLogin=async(adminData)=>{
 const adminLogout=()=>{
     localStorage.removeItem('admin')
 }
+// get user
+const getAllUsers=async(token)=>{
+    
+    const config={
+        headers:{
+            Authorization:`${token}`
+        }
+    }
+    const response = await axios.get(API_URL+'users', config);
+    console.log(response.data);
+    return response.data
+}
+
 
 const adminAuthService={
     adminLogin,
-    adminLogout
+    adminLogout,
+    getAllUsers
 }
 export default adminAuthService

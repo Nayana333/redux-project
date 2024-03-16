@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import '../profile.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -15,7 +16,7 @@ const Profile = () => {
     );
 
     useEffect(() => {
-     
+
         if (!user) {
 
             navigate('/login');
@@ -30,7 +31,7 @@ const Profile = () => {
             alert("Please upload a file");
             return;
         }
-
+        console.log(image);
         const data = new FormData();
         data.append('file', image);
         data.append("upload_preset", "elellcsz");
@@ -42,6 +43,7 @@ const Profile = () => {
         })
             .then((resp) => resp.json())
             .then((data) => {
+                console.log(data)
                 dispatch(profileUpdate(data.url));
             })
             .catch((err) => console.log(err));
@@ -54,7 +56,7 @@ const Profile = () => {
                     <div className="col-md-7">
                         <div className="card p-3 py-4">
                             <div className="text-center">
-                            <img
+                                <img
                                     src={
                                         user?.profileUrl
                                             ? user.profileUrl

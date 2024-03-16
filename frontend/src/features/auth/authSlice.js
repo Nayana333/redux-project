@@ -53,19 +53,19 @@ export const login = createAsyncThunk(
 )
 //upload profile
 
-export const profileUpdate=createAsyncThunk('auth/profile',async(profileUrl,thunkAPI)=>{
+export const profileUpdate = createAsyncThunk('auth/profile', async (profileUrl, thunkAPI) => {
   try {
-     const token = thunkAPI.getState().auth.user.token
-    return await authService.profileUpload(token,profileUrl)
+    const {token} = JSON.parse(localStorage.getItem('user'))
+    return await authService.profileUpload(token, profileUrl)
   } catch (error) {
     const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString()
-      return thunkAPI.rejectWithValue(message)
-    
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+
   }
 })
 
@@ -119,22 +119,22 @@ export const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.user = null
       })
-      .addCase(profileUpdate.pending,(state)=>{
-        state.isLoading=true
+      .addCase(profileUpdate.pending, (state) => {
+        state.isLoading = true
       })
-      .addCase(profileUpdate.rejected,(state,action)=>{
-        state.isError=true;
-        state.isLoading=false
-        state.message=action.payload
+      .addCase(profileUpdate.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false
+        state.message = action.payload
       })
-      .addCase(profileUpdate.fulfilled,(state,action)=>{
-        state.isLoading=true;
-        state.isSuccess=true;
-        state.user={
+      .addCase(profileUpdate.fulfilled, (state, action) => {
+        state.isLoading = true;
+        state.isSuccess = true;
+        state.user = {
           ...state.user,
-          profileUrl:action.payload.profileUrl
+          profileUrl: action.payload.profileUrl
         };
-        
+
       })
 
 

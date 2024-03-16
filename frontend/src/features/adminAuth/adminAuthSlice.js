@@ -12,12 +12,31 @@ const initialState = {
     message: "",
 };
 
+//getuser
+
+export const getAllUsers = createAsyncThunk(
+
+    "auth/getAllUsers",
+    async (_, thunkAPI) => {
+        try {
+            const { token } = JSON.parse(localStorage.getItem('admin'))
+            const response = await adminAuthService.getAllUsers(token);
+            return response.users;
+        } catch (error) {
+            const message = (error.response && error.response.data && error.response.data.message) || error.toString();
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+
+//admin login
+
 export const adminLogin = createAsyncThunk(
     "auth/adminLogin",
     async (adminData, thunkAPI) => {
         try {
             const response = await adminAuthService.adminLogin(adminData);
-            return response.data; 
+            return response.data;
         } catch (error) {
             const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
             throw new Error(message);
@@ -26,9 +45,28 @@ export const adminLogin = createAsyncThunk(
 );
 
 //logout
-export const adminlogout=createAsyncThunk('auth/adminlogout',async()=>{
+export const adminlogout = createAsyncThunk('auth/adminlogout', async () => {
     await adminAuthService.adminLogout()
 })
+
+//edituser
+
+// export const editUser = createAsyncThunk('admin/editUser',
+
+//     async ({ userId, name, email }, thunkAPI) => {
+//         try {
+//             const token = thunkAPI.getState().adminAuth.admin.token
+//             return await adminAuthService.editUserDetails(token, userId, name, email)
+
+//         } catch (error) {
+//             alert(error)
+//                 const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+//                 return thunkAPI.rejectWithValue(message)
+            
+
+//         }
+//     }
+// )
 
 export const adminAuthSlice = createSlice({
     name: 'admin',
@@ -45,19 +83,19 @@ export const adminAuthSlice = createSlice({
         builder
             .addCase(adminLogin.pending, (state) => {
                 state.isLoading = true;
-                state.isError = false; 
-                state.isSuccess = false; 
+                state.isError = false;
+                state.isSuccess = false;
             })
             .addCase(adminLogin.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.admin = action.payload; 
+                state.admin = action.payload;
             })
             .addCase(adminLogin.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.isSuccess = false; 
-                state.message = action.error.message; 
+                state.isSuccess = false;
+                state.message = action.error.message;
             })
             .addCase(adminlogout.pending, (state) => {
                 state.isLoading = true;
@@ -67,12 +105,27 @@ export const adminAuthSlice = createSlice({
             .addCase(adminlogout.fulfilled, (state) => {
                 state.isLoading = false;
                 state.isSuccess = false;
-                state.admin = null; 
+                state.admin = null;
             })
             .addCase(adminlogout.rejected, (state) => {
                 state.isLoading = false;
                 state.isError = true;
-            });
+            })
+            .addCase(getAllUsers.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getAllUsers.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload
+
+            })
+            .addCase(getAllUsers.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.users = action.payload
+
+            })
     }
 });
 
