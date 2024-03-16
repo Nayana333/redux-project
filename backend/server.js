@@ -14,10 +14,10 @@ app.use(express.json())
 app.use(morgan('dev'))
 app.use(cors())
 app.use(express.urlencoded({ extended: false }))
-const user = require('./routes/userRoute')
+
 app.use('/api/admin/', require('./routes/adminRoute'))
 app.use('/goals/', require('./routes/goalRoutes'))
-app.use('/', user)
+app.use('/', require('./routes/userRoute'))
 
 
 app.use(errorHandler)

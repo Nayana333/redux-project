@@ -10,6 +10,7 @@ const initialState = {
     isError: false,
     isSuccess: false,
     message: "",
+    users:[]
 };
 
 //getuser
@@ -62,11 +63,24 @@ export const adminlogout = createAsyncThunk('auth/adminlogout', async () => {
 //             alert(error)
 //                 const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
 //                 return thunkAPI.rejectWithValue(message)
-            
+
 
 //         }
 //     }
 // )
+
+export const editUser = createAsyncThunk('admin/editUser', async ({ userId, name, email }, thunkAPI) => {
+    try {
+
+        const { token } = JSON.parse(localStorage.getItem('admin'))
+        return await adminAuthService.editUserDetails(token, userId, name, email)
+    } catch (error) {
+        alert('slice')
+        alert(error)
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
 
 export const adminAuthSlice = createSlice({
     name: 'admin',

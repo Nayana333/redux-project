@@ -60,7 +60,6 @@ const getUsers = asyncHandler(async (req, res) => {
     try {
         const users = await User.find({ isAdmin: false });
         if (users && users.length > 0) {
-         
             res.status(200).json({ status: true, users: users });
         } else {
             res.status(404).json({ message: "No users found" });
@@ -73,9 +72,27 @@ const getUsers = asyncHandler(async (req, res) => {
 });
 
 
+const editUser=asyncHandler(async(req,res)=>{
+    const {userId,name,email}=req.body
+    const updateUser=await User.findByIdAndUpdate(userId,{name,email},{new:true})
+    if (!updateUser) {
+        res.status(404).json({ message: 'User not found' });
+        return;
+    }
+    const users=await User.find({isAdmin:false})
+    if(users){
+        res.status(200).json({users})
+    }else{
+        res.status(404)
+            throw new Error('user not found')
+        
+    }
+})
+
 
 module.exports = {
     loginAdmin,
-    getUsers
+    getUsers,
+    editUser
 
 }

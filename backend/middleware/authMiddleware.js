@@ -43,28 +43,34 @@ const protect = asyncHandler(async (req, res, next) => {
 //admin
 
 
-const protectAdmin=asyncHandler(async(req,res,next)=>{
-    let token 
-    
-    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer') ){
-        try{
-            //get token from header
-            token = req.headers.authorization.split(' ')[1]
-    
-            //verify
-            const decoded = jwt.verify(token,process.env.JWT_SECRET)
-    
-            //GET admin from token
-            req.admin=await User.findById(decoded.id).select('-password')
-    
-            next()
-        }catch(error){
-         console.log(error);
-         res.status(401)
-         throw new Error("Not authorized")
+const protectAdmin = asyncHandler(async (req, res, next) => {
+    console.log(req.headers.authorization);
+    if (req.headers.authorization) {
+        try {
+            let token = req.headers.authorization
+            jwt.verify(token, process.env.JWT_SECRET, async (err, success) => {
+                if (err) {
+                    if (err.message === 'TokenExpirationError') {
+                        console.log('Expired');
+                        return next()
+                    } else {
+                        console.log(err);
+                        return next()
+                    }
+                } else {
+                    req.admin = await User.findById(success.id)
+                    return next()
+                }
+            })
+
+
+        } catch (error) {
+            console.log(error);
+            res.status(401)
+            throw new Error("Not authorized")
         }
     }
 })
 
 
-module.exports = { protect, protectAdmin}
+module.exports = { protect, protectAdmin }
