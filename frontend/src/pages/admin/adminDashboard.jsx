@@ -41,7 +41,7 @@ const AdminDashboard = () => {
             <input style={{height:'35px',width:'452px',marginLeft:'177px'}} className='form-control' placeholder='username/email'  type='text'
       value={searchQuery}
       onChange={handleSearchchange} />
-            <button style={{height:'35px',marginLeft:'10px'}} className='btn-1'> <FaSearch/> Search</button>
+            <button style={{height:'35px',marginLeft:'-39px',background:'transparent',border:'transparent'}} className='btn-1'> <FaSearch/> </button>
         </div>
       <h1>Welcome {admin && admin.name}</h1>
       <UserList />
