@@ -11,6 +11,7 @@ import { register, reset } from './features/auth/authSlice';
 import AdminDashboard from './pages/admin/adminDashboard'
 import AdminHeader from './component/AdminHeader';
 import AdminLogin from './pages/admin/AdminLogin';
+import AddUser from './pages/admin/AddUser';
 
 function App() {
  
@@ -34,6 +35,7 @@ function App() {
             {/* admin routes */}
             <Route path='/admin' element={<AdminDashboard/>} />
             <Route path='/admin/adminlogin' element={<AdminLogin/>} />
+            <Route path='/admin/adduser' element={<AddUser/>}/>
 
             
 

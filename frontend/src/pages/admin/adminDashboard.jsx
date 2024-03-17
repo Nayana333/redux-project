@@ -35,6 +35,11 @@ const AdminDashboard = () => {
         return null;
       }
 
+      const onAddUser=(e)=>{
+        e.preventDefault()
+        navigate('/admin/adduser')
+      }
+
   return (
     <div>
       <div style={{display:'flex'}}  className='form-group'>
@@ -42,6 +47,9 @@ const AdminDashboard = () => {
       value={searchQuery}
       onChange={handleSearchchange} />
             <button style={{height:'35px',marginLeft:'-39px',background:'transparent',border:'transparent'}} className='btn-1'> <FaSearch/> </button>
+            <div>
+            <button className='btn btn-block' style={{ marginLeft:'173px',width:'106px'}} onClick={onAddUser}>AddUser</button>
+            </div>
         </div>
       <h1>Welcome {admin && admin.name}</h1>
       <UserList />
