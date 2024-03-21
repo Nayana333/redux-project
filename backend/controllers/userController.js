@@ -43,31 +43,32 @@ const registerUser = asyncHandler(async (req, res) => {
 })
 
 
+
+
 const loginUser = asyncHandler(async (req, res) => {
 
     const { email, password } = req.body
 
-    //check for email
-
+    // Check for email
     const user = await User.findOne({ email: email })
-    console.log(user);
-    if (user && (await bcrypt.compare(password, user.password))) {
+
+    // Check if user exists and is not blocked
+    if (user && !user.isBlock && (await bcrypt.compare(password, user.password))) {
         res.json({
             _id: user.id,
             name: user.name,
             email: user.email,
             profileUrl: user.profileUrl,
             token: generateTocken(user._id)
-
         })
     } else {
-        res.status(400)
-        throw new Error('invalid credentials')
-
+        if (user && user.isBlock) {
+            res.status(403).json({ message: 'Your account is temporarily suspended. Please contact support.' });
+        } else {
+            res.status(400).json({ message: 'Invalid credentials' });
+        }
     }
-
 })
-
 
 
 const getMe = asyncHandler(async (req, res) => {

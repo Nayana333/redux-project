@@ -39,7 +39,7 @@ const AdminHeader = () => {
              </li>
              <li>
              <Link to='#'>
-                <FaUser/>profile
+                <FaUser/>{admin.email}
             </Link>
                                   
              </li>

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import adminAuthService from './adminAuthService';
+import Swal from "sweetalert2";
 
 // Get admin from local storage
 const admin = JSON.parse(localStorage.getItem("admin"));
@@ -10,7 +11,7 @@ const initialState = {
     isError: false,
     isSuccess: false,
     message: "",
-    users:[]
+    users: []
 };
 
 //getuser
@@ -37,6 +38,16 @@ export const adminLogin = createAsyncThunk(
     async (adminData, thunkAPI) => {
         try {
             const response = await adminAuthService.adminLogin(adminData);
+            console.log(response);
+            if (!response.status === 200) {
+                let res = await Swal.fire({
+                    title: 'Error',
+                    icon: 'error',
+                    text: 'Incorrect Password',
+                    showConfirmButton: true,
+                    confirmButtonText: 'Ok'
+                })
+            }
             return response.data;
         } catch (error) {
             const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -58,8 +69,6 @@ export const editUser = createAsyncThunk('admin/editUser', async ({ userId, name
         const { token } = JSON.parse(localStorage.getItem('admin'))
         return await adminAuthService.editUserDetails(token, userId, name, email)
     } catch (error) {
-        alert('slice')
-        alert(error)
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
@@ -68,38 +77,59 @@ export const editUser = createAsyncThunk('admin/editUser', async ({ userId, name
 //UserBlock
 
 
-export const UserBlock=createAsyncThunk(
+export const UserBlock = createAsyncThunk(
     "admin/userBlock",
-    async(userId,thunkAPI)=>{
+    async (userId, thunkAPI) => {
         try {
 
             const token = JSON.parse(localStorage.getItem('admin'))
-            return await adminAuthService.userBlock(token,userId)
-            
+            return await adminAuthService.userBlock(token, userId)
+
         } catch (error) {
-            const message=(error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+            const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
             return thunkAPI.rejectWithValue(message)
-            
+
         }
     }
 )
 
 //search user
 
-export const searchUser=createAsyncThunk(
+export const searchUser = createAsyncThunk(
     "admin/searchUser",
-    async(query,thunkAPI)=>{
-        try{
-            const token=thunkAPI.getState().admin.admin.token;
-            return await adminAuthService.searchUser(query,token)
-        }catch(error){
-            const message=(
+    async (query, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().admin.admin.token;
+            return await adminAuthService.searchUser(query, token)
+        } catch (error) {
+            const message = (
                 error.response && error.response.data && error.response.data
-            ) ||error.toString()
+            ) || error.toString()
             return thunkAPI.rejectWithValue(message)
         }
     }
 );
+
+
+//addUser
+
+export const addUser = createAsyncThunk('admin/register',
+    async (user, thunkAPI) => {
+
+        try {
+
+
+            const token = thunkAPI.getState().admin.admin.token
+            return await adminAuthService.addUser(user, token)
+
+        } catch (error) {
+            const message = (
+                error.response && error.response.data && error.response.data.message
+            ) || error.toString()
+            return thunkAPI.rejectWithValue(message)
+
+        }
+    })
 
 
 
@@ -112,6 +142,7 @@ export const adminAuthSlice = createSlice({
             state.isError = false;
             state.isSuccess = false;
             state.message = "";
+            state.isUserAdded = false;
         },
     },
     extraReducers: (builder) => {
@@ -163,31 +194,46 @@ export const adminAuthSlice = createSlice({
             })
             .addCase(UserBlock.pending, (state) => {
                 state.isLoading = true;
-              })
+            })
             .addCase(UserBlock.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.users = action.payload.users;
-              })
+            })
             .addCase(UserBlock.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
             })
-            .addCase(searchUser.rejected,(state,action)=>{
-                state.isError=true;
-                state.isLoading=false
-                state.message=action.payload
+            .addCase(searchUser.rejected, (state, action) => {
+                state.isError = true;
+                state.isLoading = false
+                state.message = action.payload
 
             })
-            .addCase(searchUser.pending,(state)=>{
-                state.isLoading=true
+            .addCase(searchUser.pending, (state) => {
+                state.isLoading = true
             })
-            .addCase(searchUser.fulfilled,(state,action)=>{
-                state.isLoading=true;
-                state.isSuccess=true;
-                state.users=action.payload.users
+            .addCase(searchUser.fulfilled, (state, action) => {
+                state.isLoading = true;
+                state.isSuccess = true;
+                state.users = action.payload.users
             })
+            .addCase(addUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(addUser.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(addUser.fulfilled, (state, action) => {
+                state.isLoading = true;
+                state.isSuccess = true;
+                state.isUserAdded = false;
+                state.users = action.payload.users;
+            })
+
     }
 });
 

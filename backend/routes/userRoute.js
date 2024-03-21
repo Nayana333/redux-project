@@ -11,4 +11,6 @@ router.post('/profile/upload', (req, res,next) => {
     next()
 }, protect, profileUpload);
 
+
+
 module.exports = router;

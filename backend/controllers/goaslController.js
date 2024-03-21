@@ -65,7 +65,7 @@ const updateGoals=asyncHandler(async(req,res) =>{
 //@router GET/api/goals:id
 //@ access Private
 
-const deleteGoals=asyncHandler(async(req,res) =>{
+const deleteGoal=asyncHandler(async(req,res)=>{
     const goal=await Goal.findById(req.params.id)
     if(!goal){
         res.status(400)
@@ -76,18 +76,19 @@ const deleteGoals=asyncHandler(async(req,res) =>{
         res.status(401)
         throw new Error('User not found')
     }
-     //match the logged user 
-    if(goal.user.tostring() !==req.user.id){
-        res.status(401)
-        throw new Error('User not authorized')
+    if(goal.user.toString() !== req.user.id){
+     res.status(401)
+     throw new Error('User not authorized')
     }
-    await goal.remove()
-    res.status(200).json({id:req.params.id})
-})
+    
+    await Goal.deleteOne({_id:req.params.id})
+    res.status(200).json({id:req.params.id}) 
+ })
+
 
 module.exports={
     getGoals,
     setGoal,
     updateGoals,
-    deleteGoals
+    deleteGoal
 }

@@ -3,12 +3,13 @@ import axios from "axios";
 const API_URL = 'http://localhost:5000/api/admin/'
 
 const adminLogin = async (adminData) => {
-
     const response = await axios.post(API_URL + 'adminlogin', adminData)
-    if (response.data) {
+    console.log(response);
+    if (response.status === 200) {
         localStorage.setItem('admin', JSON.stringify(response.data))
+        return response.data
     }
-    return response.data
+    return null
 }
 
 //logout
@@ -39,7 +40,7 @@ const editUserDetails = async (token, userId, name, email) => {
     const userData = {
         name: name,
         email: email,
-        userId:userId
+        userId: userId
     };
 
     const response = await axios.put(`${API_URL}users/${userId}`, userData, config);
@@ -50,14 +51,14 @@ const editUserDetails = async (token, userId, name, email) => {
 //blockuser
 
 
-const userBlock=async(token,userId)=>{
-    const config={
-        headers:{
-            Authorization:`${token}`
+const userBlock = async (token, userId) => {
+    const config = {
+        headers: {
+            Authorization: `${token}`
         }
 
     }
-    const response=await axios.post(API_URL+'block',{userId},config)
+    const response = await axios.post(API_URL + 'block', { userId }, config)
     return response.data
 }
 
@@ -65,26 +66,38 @@ const userBlock=async(token,userId)=>{
 //search user
 
 
-const searchUser=async(query,token)=>{
-    const config={
-        headers:{
-            Authorization:`${token}`
+const searchUser = async (query, token) => {
+    const config = {
+        headers: {
+            Authorization: `${token}`
         }
     }
 
-    const response=await axios.post(API_URL+'search',{query},config)
+    const response = await axios.post(API_URL + 'search', { query }, config)
     return response.data
 
 }
 
+const addUser = async (userData, token) => {
 
+
+    const config = {
+        headers: {
+            Authorization: `${token}`
+        }
+    }
+
+    const response = await axios.post(API_URL + 'addUser', { userData }, config)
+    return response.data
+}
 
 const adminAuthService = {
     adminLogin,
     adminLogout,
     getAllUsers,
-    editUserDetails, 
+    editUserDetails,
     userBlock,
-    searchUser
+    searchUser,
+    addUser
 }
 export default adminAuthService

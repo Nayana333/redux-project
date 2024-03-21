@@ -34,6 +34,7 @@ const UserList = () => {
             dispatch(getAllUsers())
         }
     };
+    
 
     const handleBlock=(userId)=>{
         if(window.confirm("Are you sure want to block the user")){

@@ -12,7 +12,6 @@ const loginAdmin = asyncHandler(async (req, res) => {
 
     console.log(user, 'user');
     const token = generateTocken(user._id)
-    console.log(token);
     if (user && user.isAdmin && user.password === password) {
 
         res.json({
@@ -23,7 +22,6 @@ const loginAdmin = asyncHandler(async (req, res) => {
             token: token
 
         })
-        console.log(user.token);
 
     } else {
         res.status(400)
@@ -72,46 +70,86 @@ const getUsers = asyncHandler(async (req, res) => {
 });
 
 
-const editUser=asyncHandler(async(req,res)=>{
-    const {userId,name,email}=req.body
-    const updateUser=await User.findByIdAndUpdate(userId,{name,email},{new:true})
+const editUser = asyncHandler(async (req, res) => {
+    const { userId, name, email } = req.body
+    const updateUser = await User.findByIdAndUpdate(userId, { name, email }, { new: true })
     if (!updateUser) {
         res.status(404).json({ message: 'User not found' });
         return;
     }
-    const users=await User.find({isAdmin:false})
-    if(users){
-        res.status(200).json({users})
-    }else{
+    const users = await User.find({ isAdmin: false })
+    if (users) {
+        res.status(200).json({ users })
+    } else {
         res.status(404)
-            throw new Error('user not found')
-        
+        throw new Error('user not found')
+
     }
 })
 
-const userBlock=asyncHandler(async(req,res)=>{
-    const userId=req.body.userId;
-    console.log(req.body,'user');
-    const user=await User.findById(userId)
+const userBlock = asyncHandler(async (req, res) => {
+    const userId = req.body.userId;
+    console.log(req.body, 'user');
+    const user = await User.findById(userId)
     console.log(user);
-    if(!user){
+    if (!user) {
         res.status(400)
         throw new Error('user not foun')
     }
-    user.isBlock=!user.isBlock
+    user.isBlock = !user.isBlock
     await user.save()
-    const users=await User.find({isAdmin:false})
-    res.status(200).json({users});
+    const users = await User.find({ isAdmin: false })
+    res.status(200).json({ users });
 });
 
 
-const searchUser=asyncHandler(async(req,res)=>{
-    const {query}=req.body
-    const regex=new RegExp(`^${query}`, 'i');
-    const users=await User.find({name:{$regex:regex}})
-    res.status(200).json({users})
+const searchUser = asyncHandler(async (req, res) => {
+    const { query } = req.body
+    const regex = new RegExp(`^${query}`, 'i');
+    const users = await User.find({
+        $or: [
+            { name: { $regex: regex } },
+            { email: { $regex: regex } }
+        ]
+    })
+    res.status(200).json({ users })
 })
 
+
+const registerUser = asyncHandler(async (req, res) => {
+    const { name, email, password } = req.body.userData;
+    if (!name || !email || !password) {
+        res.status(400)
+        throw new Error('please add all fields')
+    }
+    const userExist = await User.findOne({ email })
+    if (userExist) {
+        res.status(400)
+        throw new Error('email already exist')
+
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt)
+    const user = await User.create({
+        name,
+        email,
+        password: hashedPassword
+    })
+    const users = await User.find({ isAdmin: false })
+    if (user) {
+        res.status(200).json({ users })
+    }
+    else {
+        res.status(400)
+        throw new Error('Invalid user Data')
+    }
+
+})
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '30d',
+    })
+}
 
 
 module.exports = {
@@ -119,6 +157,7 @@ module.exports = {
     getUsers,
     editUser,
     userBlock,
-    searchUser
+    searchUser,
+    registerUser
 
 }
